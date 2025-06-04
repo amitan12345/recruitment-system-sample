@@ -36,6 +36,8 @@ class JobServiceProvider extends ServiceProvider
     {
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
+        $this->app->register(RepositoryBindingServiceProvider::class);
+        $this->app->register(UseCaseBindingServiceProvider::class);
     }
 
     /**
