@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Job\Providers;
+namespace Modules\Job\Framework\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
