@@ -6,6 +6,15 @@ use Modules\Shared\Domain\Aggregates\Aggregate;
 
 class Company implements Aggregate
 {
+    public function __get(string $name)
+    {
+        if (property_exists($this, $name)) {
+            return $this->$name;
+        }
+
+        throw new \InvalidArgumentException("Property {$name} does not exist on " . self::class);
+    }
+
     private function __construct(
         private ?int $id,
         private string $name
