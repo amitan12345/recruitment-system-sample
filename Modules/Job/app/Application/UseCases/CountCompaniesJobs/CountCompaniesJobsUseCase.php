@@ -5,17 +5,17 @@ namespace Modules\Job\Application\UseCases\CountCompaniesJobs;
 use Modules\Job\Application\UseCases\CountCompaniesJobs\Contracts\CountCompaniesJobsUseCaseInput;
 use Modules\Job\Application\UseCases\CountCompaniesJobs\Contracts\CountCompaniesJobsUseCaseInterface;
 use Modules\Job\Application\UseCases\CountCompaniesJobs\Contracts\CountCompaniesJobsUseCaseOutput;
-use Modules\Job\Domain\RepositoryInterfaces\JobRepositoryInterface;
+use Modules\Job\Domain\Services\Job\CountCompaniesJobsService;
 
 class CountCompaniesJobsUseCase implements CountCompaniesJobsUseCaseInterface
 {
     public function __construct(
-        private readonly JobRepositoryInterface $jobRepository
+        private readonly CountCompaniesJobsService $domainService
     ) {
     }
     public function execute(CountCompaniesJobsUseCaseInput $input): CountCompaniesJobsUseCaseOutput
     {
-        $jobsCount = $this->jobRepository->findByCompanyId($input->companyId)->count();
+        $jobsCount = $this->domainService->execute($input->companyId);
 
         return new CountCompaniesJobsUseCaseOutput($jobsCount);
     }

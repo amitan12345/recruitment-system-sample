@@ -1,17 +1,16 @@
 <?php
 
-namespace Modules\Job\Tests\Unit\Application\UseCases\CountCompaniesJobs;
+namespace Modules\Job\Tests\Unit\Domain\Services\Job;
 
-use Carbon\CarbonImmutable;
-use Illuminate\Foundation\Testing\TestCase;
-use Modules\Job\Application\UseCases\CountCompaniesJobs\Contracts\CountCompaniesJobsUseCaseInput;
-use Modules\Job\Application\UseCases\CountCompaniesJobs\CountCompaniesJobsUseCase;
 use Modules\Job\Domain\Aggregates\Job;
 use Modules\Job\Domain\RepositoryInterfaces\JobRepositoryInterface;
 use Modules\Job\Domain\ValueObjects\Enum\EmploymentStatus;
 use Modules\Job\Domain\ValueObjects\JobTitle;
+use Carbon\CarbonImmutable;
+use Illuminate\Foundation\Testing\TestCase;
+use Modules\Job\Domain\Services\Job\CountCompaniesJobsService;
 
-class CountCompaniesJobsUseCaseTest extends TestCase
+class CountCompaniesJobsTest extends TestCase
 {
     public function createJobAggregate(int $companyId, int $jobId): Job
     {
@@ -38,14 +37,10 @@ class CountCompaniesJobsUseCaseTest extends TestCase
             ->with($companyId)
             ->andReturn(collect([$job1, $job2, $job3]));
        
-        $testedObject = app(CountCompaniesJobsUseCase::class);
+        $testedObject = app(CountCompaniesJobsService::class);
 
-        $output = $testedObject->execute(
-            input: new CountCompaniesJobsUseCaseInput(
-                companyId: $companyId
-            )
-        );
+        $output = $testedObject->execute(companyId: $companyId);
 
-        $this->assertSame(3, $output->jobsCount);
+        $this->assertSame(3, $output);
     }
 }
