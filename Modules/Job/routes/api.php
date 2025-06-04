@@ -1,5 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Job\Presentation\Api\CountCompaniesJobs\CountCompaniesJobsController;
 
-Route::get('health', fn() => 'this is job module api');
+Route::get('/count', [CountCompaniesJobsController::class, 'count'])->name('count');
