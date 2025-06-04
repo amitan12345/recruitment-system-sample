@@ -5,7 +5,9 @@ namespace Modules\Job\Tests\Feature\Infrastructure\Repositories;
 use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\TestCase;
+use Illuminate\Support\Facades\Event;
 use Modules\Job\Domain\Aggregates\Job;
+use Modules\Job\Domain\Events\Job\JobCreated;
 use Modules\Job\Domain\ValueObjects\Enum\EmploymentStatus;
 use Modules\Job\Domain\ValueObjects\JobTitle;
 use Modules\Job\Infrastructure\Repositories\JobRepository;
@@ -14,6 +16,12 @@ use Modules\Job\Infrastructure\Models\Job as JobModel;
 class JobRepositoryTest extends TestCase
 {
     use DatabaseTransactions;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Event::fake();
+    }
 
     public function test_job_can_be_created()
     {
@@ -27,6 +35,8 @@ class JobRepositoryTest extends TestCase
         $repository->save($jobAggregate);
 
         $this->assertDatabaseHas(JobModel::class, ['company_id' => $jobAggregate->companyId]);
+
+        Event::assertDispatched(JobCreated::class);
     }
 
     public function test_job_can_be_updated()
@@ -53,6 +63,8 @@ class JobRepositoryTest extends TestCase
         $repository->save($jobAggregate);
 
         $this->assertDatabaseHas(JobModel::class, ['title' => $newName]);
+
+        Event::assertDispatched(JobCreated::class);
     }
 
     public function test_job_can_be_found_by_id()

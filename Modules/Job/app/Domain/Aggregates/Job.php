@@ -17,7 +17,7 @@ class Job implements Aggregate
 
         throw new \InvalidArgumentException("Property {$name} does not exist on " . self::class);
     }
-    
+
     private function __construct(
         private ?int $id,
         private int $companyId,

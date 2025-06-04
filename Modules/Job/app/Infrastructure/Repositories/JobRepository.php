@@ -4,6 +4,7 @@ namespace Modules\Job\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
 use Modules\Job\Domain\Aggregates\Job;
+use Modules\Job\Domain\Events\Job\JobCreated;
 use Modules\Job\Domain\RepositoryInterfaces\JobRepositoryInterface;
 use Modules\Job\Domain\ValueObjects\JobTitle;
 use Modules\Job\Infrastructure\Models\Job as JobModel;
@@ -21,12 +22,15 @@ class JobRepository implements JobRepositoryInterface
         ];
 
         if (!is_null($job->id)) {
-            JobModel::where('id', $job->id)
-                ->update($properties);
+            $job = JobModel::find($job->id);
+            $job->update($properties);
+
+            event(new JobCreated(jobId: $job->id));
             return;
         }
         
-        JobModel::create($properties);
+        $job = JobModel::create($properties)->fresh();
+        event(new JobCreated(jobId: $job->id));
     }
 
     public function findById(int $id): ?Job
